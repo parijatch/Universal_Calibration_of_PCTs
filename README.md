@@ -1,12 +1,17 @@
 # Universal-Calibration-of-PCTs
 
-This repository contains the code used for simulations done in [1].
+This repository contains the code used to generate the simulation results presented in [1].
 
-The folder named **calibration - heavy-tailed tests** contains the code used for simulating p-values from a multivariate t copula with location parameter as the origin and illustrating that PCT (Pareto Combination Test) retains universal (asymptotic) calibration whereas CCT (Cauchy Combination Test) is conservative for stronger tail-dependence.
+## Repository structure
 
-The folder named **power simulations** contains code that simulates p-values from a multivariate t copula with non-null location parameter and illustrates that PCT is always at least as powerful as CCT, with it being more powerful in most cases.
+- **`calibration heavy-tailed tests/`**  
+  Contains code for simulating p-values from a multivariate *t* copula with zero location parameter. These simulations illustrate that the **Pareto Combination Test (PCT)** achieves universal (asymptotic) calibration, while the **Cauchy Combination Test (CCT)** becomes conservative under stronger tail dependence.
 
-The folder named **data splitting and FCT** contains the code for the Fr\'etchet combination test and verifies using simulations that FCT is asymptotically calibrated only under tain independence.
+- **`power simulations/`**  
+  Contains code for simulating p-values from a multivariate *t* copula with a non-null location parameter. The simulations demonstrate that PCT is uniformly at least as powerful as CCT, and strictly more powerful in most settings considered.
+
+- **`data splitting and FCT/`**  
+  Contains code implementing the **Fréchet Combination Test (FCT)**. Simulation results in this folder verify that FCT is asymptotically calibrated only under tail independence.
 
 ## References
 
