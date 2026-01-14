@@ -3,20 +3,8 @@ library(MASS)
 library(data.table)
 library(latex2exp)
 
-source("~/Downloads/MRV_Cauchy_n_Pareto/Code/utils.R", chdir = TRUE)
-get.cor <- function(d, rho=0.5, cor.type="exch") {
-  stopifnot(cor.type %in% c("exch", "autoreg", "diag"))
-  if (cor.type=="exch") {
-    cor.mat <- matrix(rep(rho, d*d), nrow=d)
-    diag(cor.mat) <- 1
-  }
-  else if (cor.type=="autoreg") {
-    cor.mat <- rho^(abs(outer(1:d, 1:d, FUN="-")))
-  } else if (cor.type=="diag") {
-    cor.mat <- diag(d)
-  }
-  return(cor.mat)
-} 
+source("../utils.R", chdir = TRUE)
+
 simu.mvt.eig <- function(d, n=1e5, nu=1, cor.mat, effect.size=0, eig.type=c("top", "bottom")) {
   eig.type <- match.arg(eig.type)
   
@@ -134,7 +122,7 @@ run.simu.eig <- function(n=1e4, d, nu, effect.size.vec=seq(0, 40, length.out=20)
  ###Plotting###
 nu.vec <- c(1, 10, 25)     
 d.vec <- c(3, 10, 20)     
-eig.type <- "bottom"
+eig.type <- "top"
 cor.type<- "autoreg" 
 
 par(mfrow = c(length(nu.vec), length(d.vec) + 1), mar = c(4, 4, 3, 1), oma = c(0, 0, 4, 0))

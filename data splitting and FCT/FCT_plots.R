@@ -3,21 +3,7 @@ library(MASS)
 library(data.table)
 library(latex2exp)
 
-source("utils.R")
-######Correlation Matrix######
-get.cor <- function(d, rho=0.5, cor.type="exch") {
-  stopifnot(cor.type %in% c("exch", "autoreg", "diag"))
-  if (cor.type=="exch") {
-    cor.mat <- matrix(rep(rho, d*d), nrow=d)
-    diag(cor.mat) <- 1
-  }
-  else if (cor.type=="autoreg") {
-    cor.mat <- rho^(abs(outer(1:d, 1:d, FUN="-")))
-  } else if (cor.type=="diag") {
-    cor.mat <- diag(d)
-  }
-  return(cor.mat)
-}
+source("../utils.R")
 
 ######Simulate Multivariate-t######
 simu.mvt.null <- function(d=4, n=1e5, nu=1, cor.mat=diag(d)){
@@ -87,7 +73,7 @@ transform_pvalues <- function(P1, subsets) {
 ######Calibration Lineplot######
 calibration.lineplot.split <- function(nu.vec = c(1, 30),
                                  alpha.vec = 10^seq(log10(0.001), log10(0.1), length.out = 100),
-                                 d = 10, n = 1e6,k=5,
+                                 d = 10, n = 1e6,k=5,rho=0.5,
                                  cor.type = "autoreg",
                                  methods = c("Pareto", "Cauchy", "Frechet")) {
   stopifnot(all(methods %in% c("Pareto", "Cauchy", "Frechet")))
@@ -99,7 +85,7 @@ calibration.lineplot.split <- function(nu.vec = c(1, 30),
   
   for (nu in nu.vec) {
     message(sprintf("Running nu = %f", nu))
-    cor.mat <- get.cor(d, cor.type = cor.type)
+    cor.mat <- get.cor(d, rho=rho,cor.type = cor.type)
     
     # simulate under null
     
@@ -155,13 +141,13 @@ calibration.lineplot.split <- function(nu.vec = c(1, 30),
 ######Heatmap######
 calibration.heatmaps.splits <- function(alpha.vec = c( 0.05, 0.01, 0.005,0.001,0.0005),
                                  nu.vec = c(1, 5, 15, 30),
-                                 d = 10, n = 1e6,k=5,
+                                 d = 10, n = 1e6,k=5,rho=0.5,
                                  cor.type = "autoreg") {
   mat.frechet <- matrix(NA, nrow = length(alpha.vec), ncol = length(nu.vec))
 
   for (i in seq_along(nu.vec)) {
     nu <- nu.vec[i]
-    cor.mat <- get.cor(d,cor.type = cor.type)
+    cor.mat <- get.cor(d,rho=rho,cor.type = cor.type)
     
     # simulate null
     pval<-simu.mvt.null(d=d,n=n,nu=nu,cor.mat = cor.mat)
