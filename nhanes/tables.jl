@@ -26,7 +26,7 @@ end
 
 println(raw"\begin{tabular}{lrrrrrrrrrrr}")
 println(raw"& \multicolumn{5}{c}{Female} && \multicolumn{5}{c}{Male}\\\cline{2-6}\cline{8-12}")
-println(raw"& $n\;$ & mean & $q_{10}$ & $q_{90}$ & Bonf && $n\;$ & mean & $q_{10}$ & $q_{90}$ & Bonf\\\\")
+println(raw"& $n\;$ & $q_{50}$ & $q_{10}$ & $q_{90}$ & Bonf && $n\;$ & $q_{50}$ & $q_{10}$ & $q_{90}$ & Bonf\\\\")
 
 make_table(den_lab, "den/lab")
 make_table(bmx_lab, "bmx/lab")
