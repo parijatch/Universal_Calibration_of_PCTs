@@ -4,10 +4,7 @@ using Random
 using Distributions
 using Serialization
 
-# Path to data files
-#pa = "/home/kshedden/data/nhanes/2013-2014"
-pa = "/home/kshedden/data/nhanes/2015-2016"
-
+include("configure.jl")
 include("prep_nhanes.jl")
 include("tau_clustered.jl")
 

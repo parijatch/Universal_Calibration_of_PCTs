@@ -1,20 +1,20 @@
+"""
+Before running the script, download data files from here:
+
+https://wwwn.cdc.gov/nchs/nhanes
+
+Set the variable 'year' to refer to the year that is being analyzed.
+
+Set the path variable 'pa' to point to the location of the data files.
+"""
+
 using DataFrames
 using CSV
 using LinearAlgebra
 using ReadStatTables
 using Statistics
 
-"""
-Before running the script, download data files from here:
-
-https://wwwn.cdc.gov/nchs/nhanes
-
-Set the path variable 'pa' to point to the location of the data files.
-"""
-
-yr = split(basename(pa), "-")[1]
-sfx = Dict("2013"=>"H", "2015"=>"I", "2017"=>"J")[yr]
-wave = basename(pa)
+include("configure.jl")
 
 function zscore(x)
     return (x .- mean(x)) ./ std(x)
@@ -41,13 +41,12 @@ function drop_redundant(dm; tol=1e-5)
 end
 
 # Read data files
-demog = readstat(joinpath(pa, "DEMO_$(sfx).XPT")) |> DataFrame
-bio = readstat(joinpath(pa, "BIOPRO_$(sfx).XPT")) |> DataFrame
-bpx = readstat(joinpath(pa, "BPX_$(sfx).XPT")) |> DataFrame
-bmx = readstat(joinpath(pa, "BMX_$(sfx).XPT")) |> DataFrame
-dxx = readstat(joinpath(pa, "DXX_$(sfx).XPT")) |> DataFrame
-dxx = readstat(joinpath(pa, "DXX_$(sfx).XPT")) |> DataFrame
-dden = readstat(joinpath(pa, "OHXDEN_$(sfx).XPT")) |> DataFrame
+demog = readstat(joinpath(pa, "DEMO_$(sfx[year]).xpt")) |> DataFrame
+bio = readstat(joinpath(pa, "BIOPRO_$(sfx[year]).xpt")) |> DataFrame
+bpx = readstat(joinpath(pa, "BPX_$(sfx[year]).xpt")) |> DataFrame
+bmx = readstat(joinpath(pa, "BMX_$(sfx[year]).xpt")) |> DataFrame
+dxx = readstat(joinpath(pa, "DXX_$(sfx[year]).xpt")) |> DataFrame
+dden = readstat(joinpath(pa, "OHXDEN_$(sfx[year]).xpt")) |> DataFrame
 
 # Select a few demographic variables
 demog = select(demog, [:SEQN, :RIAGENDR, :RIDAGEYR, :SDMVSTRA, :SDMVPSU, :WTINT2YR])
