@@ -144,10 +144,7 @@ calibration.lineplot <- function(nu.vec = c(1, 30),
     
   }
   
-  mtext(
-    TeX(sprintf("Calibration of PCT & CCT under Multivariate-$t_\\nu(0,\\Sigma)$ with %s $\\Sigma$", cor.type)),
-    outer = TRUE, cex = 1.5, line = 1
-  )
+  
   
   par(mfrow = c(1, 1))
 }
@@ -203,7 +200,7 @@ calibration.heatmaps <- function(alpha.vec = c( 0.01, 0.005,0.001,0.0005,0.0001)
 
 
 # Calibration line plots
-calibration.lineplot(n=1e6,d=10,nu.vec = c(0.5, 1, 30), rho=0.5,cor.type = "autoreg")
+calibration.lineplot(n=1e6,d=10,nu.vec = c(0.5, 10, 30), rho=0.5,cor.type = "autoreg")
 
 # Calibration heatmaps
 calibration.heatmaps(n=1e6,d=10,nu.vec = c(0.1,0.5, 1, 5, 15, 30),rho=0.5,
