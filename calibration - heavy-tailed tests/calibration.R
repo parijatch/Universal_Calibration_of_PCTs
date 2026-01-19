@@ -121,7 +121,7 @@ calibration.lineplot <- function(nu.vec = c(1, 30),
                                  alpha.vec = 10^seq(log10(0.001), log10(0.01), length.out = 100),
                                  d = 10, n = 1e6, rho=0.5,
                                  cor.type = "autoreg") {
-  par(mfrow = c(1, length(nu.vec)), mar = c(4, 4, 3, 1), oma = c(0, 0, 4, 0))
+  par(mfrow = c(1, length(nu.vec)), mar = c(4, 4, 3, 1), oma = c(0, 0, 0, 0))
   
   for (nu in nu.vec) {
     message(sprintf("Running nu = %f", nu))
@@ -143,8 +143,6 @@ calibration.lineplot <- function(nu.vec = c(1, 30),
     legend("bottomright", legend=c("PCT", "CCT"), col=c("red", "blue"), pch=1)
     
   }
-  
-  
   
   par(mfrow = c(1, 1))
 }
