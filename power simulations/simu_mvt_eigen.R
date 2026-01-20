@@ -120,9 +120,9 @@ run.simu.eig <- function(n=1e4, d, nu, effect.size.vec=seq(0, 40, length.out=20)
   return(power.df)
 }
  ###Plotting###
-nu.vec <- c(1, 10, 25)     
+nu.vec <- c(1, 10)     
 d.vec <- c(3, 10, 20)     
-eig.type <- "top"
+eig.type <- "bottom"
 cor.type<- "autoreg" 
 
 par(
@@ -156,10 +156,12 @@ for (i in seq_along(nu.vec)) {
       ylim = c(0, max(1.5, rel.pareto, rel.cauchy, na.rm = TRUE)),
       xlab = "", ylab = "",
       col = "red",
+      lwd = 2.5,
+      lty = 3, 
       main = TeX(sprintf("ν=%d, d=%d", nu, d))
     )
     
-    points(power.wide$tau, rel.cauchy, type = "l", col = "blue")
+    points(power.wide$tau, rel.cauchy, type = "l", col = "blue", lwd=2.5)
     abline(h = 1, lty = 2)
   }
 }
