@@ -122,7 +122,7 @@ run.simu.eig <- function(n=1e4, d, nu, effect.size.vec=seq(0, 40, length.out=20)
  ###Plotting###
 nu.vec <- c(1, 10, 25)     
 d.vec <- c(3, 10, 20)     
-eig.type <- "bottom"
+eig.type <- "top"
 cor.type<- "autoreg" 
 
 par(
@@ -152,14 +152,14 @@ for (i in seq_along(nu.vec)) {
     rel.cauchy <- power.wide$Cauchy / LRT.safe
     
     plot(
-      power.wide$tau, rel.pareto, type = "b",
+      power.wide$tau, rel.pareto, type = "l",
       ylim = c(0, max(1.5, rel.pareto, rel.cauchy, na.rm = TRUE)),
       xlab = "", ylab = "",
       col = "red",
       main = TeX(sprintf("ν=%d, d=%d", nu, d))
     )
     
-    points(power.wide$tau, rel.cauchy, type = "b", col = "blue")
+    points(power.wide$tau, rel.cauchy, type = "l", col = "blue")
     abline(h = 1, lty = 2)
   }
 }
@@ -170,7 +170,7 @@ mtext(
   side = 1, outer = TRUE, line = 2
 )
 mtext(
-  "Power relative to LRT",
+  "Empirical power relative to LRT",
   side = 2, outer = TRUE, line = 2
 )
 
