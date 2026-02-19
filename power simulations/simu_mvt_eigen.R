@@ -3,7 +3,9 @@ library(MASS)
 library(data.table)
 library(latex2exp)
 
-source("../utils.R", chdir = TRUE)
+this_file <- normalizePath(sys.frames()[[1]]$ofile)
+base_dir <- dirname(this_file)
+source(file.path(base_dir, "..", "utils.R"))
 
 simu.mvt.eig <- function(d, n=1e5, nu=1, cor.mat, effect.size=0, eig.type=c("top", "bottom")) {
   eig.type <- match.arg(eig.type)
@@ -24,15 +26,19 @@ simu.mvt.eig <- function(d, n=1e5, nu=1, cor.mat, effect.size=0, eig.type=c("top
   mu.rep <- t(replicate(n, mu))
   
   X <- X + mu.rep
-  pval <-pmin(1 - pt(X, df=nu),1)
+  #pval <-pmin(2*(1 - pt(abs(X), df=nu)),1)
   
   
+  return(X)
+}
+comp_pvalue <- function(X){
+  pval <-pmin(2*(1 - pt(abs(X), df=nu)),1)
   return(pval)
 }
 
-test.LRT.mod <- function(pval, pval.null, effect.size, nu, cor.mat, eig.type) {
-  X <- qt(1 - pval, df=nu)
-  X0 <- qt(1 - pval.null, df=nu)
+test.LRT.mod <- function(X, X0, effect.size, nu, cor.mat, eig.type) {
+  # X <- qt(1 - pval/2, df=nu)
+  # X0 <- qt(1 - pval.null/2, df=nu)
   d <- dim(X)[2]
   n <- dim(X)[1]
   inv.cor.mat <- solve(cor.mat)
@@ -92,8 +98,8 @@ run.simu.eig <- function(n=1e4, d, nu, effect.size.vec=seq(0, 40, length.out=20)
                        effect.size=0, eig.type=eig.type)
     
     # compute test pvals
-    pval.pareto <- combine.test(X, method="Pareto")
-    pval.cauchy <- combine.test(X, method="Cauchy")
+    pval.pareto <- combine.test(comp_pvalue(X), method="Pareto")
+    pval.cauchy <- combine.test(comp_pvalue(X), method="Cauchy")
     pval.LRT <- test.LRT.mod(X, X0, effect.size=effect.size, nu=nu,
                              cor.mat=cor.mat,eig.type=eig.type)
     if (any(is.na(pval.LRT))) {
@@ -122,7 +128,7 @@ run.simu.eig <- function(n=1e4, d, nu, effect.size.vec=seq(0, 40, length.out=20)
  ###Plotting###
 nu.vec <- c(1, 10)     
 d.vec <- c(3, 10, 20)     
-eig.type <- "bottom"
+eig.type <- "top"
 cor.type<- "autoreg" 
 
 par(
@@ -135,32 +141,32 @@ for (i in seq_along(nu.vec)) {
   nu <- nu.vec[i]
   for (j in seq_along(d.vec)) {
     d <- d.vec[j]
-    
+
     message(sprintf("Running nu=%d, d=%d", nu, d))
-    
+
     power.df <- run.simu.eig(
       n = 1e4, d = d, nu = nu, eig.type = eig.type,
       effect.size.vec = seq(0, 40, length.out = 20),
       cor.type = cor.type, alpha = 0.05, .plot = FALSE
     )
-    
+
     power.wide <- dcast(power.df, tau ~ method, value.var = "power")
-    
+
     eps <- 1e-7
     LRT.safe <- pmax(power.wide$LRT, eps)
     rel.pareto <- power.wide$Pareto / LRT.safe
     rel.cauchy <- power.wide$Cauchy / LRT.safe
-    
+
     plot(
       power.wide$tau, rel.pareto, type = "l",
       ylim = c(0, max(1.5, rel.pareto, rel.cauchy, na.rm = TRUE)),
       xlab = "", ylab = "",
       col = "red",
       lwd = 2.5,
-      lty = 3, 
+      lty = 3,
       main = TeX(sprintf("ν=%d, d=%d", nu, d))
     )
-    
+
     points(power.wide$tau, rel.cauchy, type = "l", col = "blue", lwd=2.5)
     abline(h = 1, lty = 2)
   }
@@ -177,3 +183,60 @@ mtext(
 )
 
 par(mfrow = c(1, 1))
+# for (i in seq_along(nu.vec)) {
+#   nu <- nu.vec[i]
+#   for (j in seq_along(d.vec)) {
+#     d <- d.vec[j]
+#     
+#     message(sprintf("Running nu=%d, d=%d", nu, d))
+#     
+#     power.df <- run.simu.eig(
+#       n = 1e4, d = d, nu = nu, eig.type = eig.type,
+#       effect.size.vec = seq(0, 40, length.out = 20),
+#       cor.type = cor.type, alpha = 0.05, .plot = FALSE
+#     )
+#     
+#     power.wide <- dcast(power.df, tau ~ method, value.var = "power")
+#     
+#     # Ensure columns exist (optional but safe)
+#     stopifnot(all(c("Pareto", "Cauchy", "LRT") %in% names(power.wide)))
+#     
+#     y_max <- max(power.wide$Pareto, power.wide$Cauchy, power.wide$LRT, na.rm = TRUE)
+#     
+#     # Plot Pareto first
+#     plot(
+#       power.wide$tau, power.wide$Pareto, type = "l",
+#       ylim = c(0, min(1, y_max)),   # power is in [0,1]
+#       xlab = "", ylab = "",
+#       col = "red",
+#       lwd = 2.5,
+#       lty = 3,
+#       main = TeX(sprintf("ν=%g, d=%g", nu, d))
+#     )
+#     
+#     # Add Cauchy and LRT
+#     lines(power.wide$tau, power.wide$Cauchy, col = "blue", lwd = 2.5, lty = 1)
+#     lines(power.wide$tau, power.wide$LRT,    col = "black",  lwd = 2.8, lty = 2)
+#     
+#     legend(
+#       "bottomright",
+#       legend = c("Pareto", "Cauchy", "LRT"),
+#       col    = c("red", "blue", "black"),
+#       lty    = c(3, 1, 2),
+#       lwd    = c(2.5, 2.5, 2.8),
+#       bty    = "n"
+#     )
+#   }
+# }
+# 
+# ## Shared axis labels
+# mtext(
+#   TeX(r"(effect size = $\|\mu\|_2$)"),
+#   side = 1, outer = TRUE, line = 2
+# )
+# mtext(
+#   "Empirical power",
+#   side = 2, outer = TRUE, line = 2
+# )
+# 
+# par(mfrow = c(1, 1))
