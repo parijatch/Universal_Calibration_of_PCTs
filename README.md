@@ -1,23 +1,21 @@
-# Universal_Calibration_of_PCTs
+# Universal calibration of heavy-tailed combination tests
 
-This repository contains the code used to generate the simulation and application results presented in [1].
+This repository contains R and Julia code used to generate the simulation and application results presented in [1].
 
-## Repository structure
+## Structure
 
-- **`calibration heavy-tailed tests/`**
-  Contains code for simulating p-values from a multivariate *t* copula with zero location parameter. These simulations illustrate that the **Pareto Combination Test (PCT)** achieves universal (asymptotic) calibration, while the **Cauchy Combination Test (CCT)** becomes conservative under stronger tail dependence.
+### `simu/` contains scripts to reproduce the simulations. 
 
-- **`power simulations/`**
-  Contains code for simulating p-values from a multivariate *t* copula with a non-null location parameter. The simulations demonstrate that PCT is uniformly at least as powerful as CCT, and strictly more powerful in most settings considered.
+The script `run-simu.R` will generate and save simulated p-values. Then run `plot.R` to generate the plots. The script `plot-pairwise.R` generates the pairwise plots for combined p-values. 
 
-- **`data splitting and FCT/`**
-  Contains code implementing the **Fréchet Combination Test (FCT)**. Simulation results in this folder verify that FCT is asymptotically calibrated only under tail independence.
+### `nhanes/` contains code used to illustrate the Pareto combination test using NHANES data. 
 
-- **`nhanes/`**
-  Contains code used to illustrate the PCT using NHANES data.
+This directory contains all code needed to reproduce the NHANES data analysis, illustrating the use of the Pareto Combination Test to assess the independence between multivariate health phenotypes using NHANES data.
 
-## References
+Set the year and data directory in the file `configure.jl`.  Then run `get_data.jl` to download the files, and run `corr_proj.jl` to run the full analysis (this will take approximately one hour). Finally, run the `tables.jl` script to generate the latex output.
 
-[1] Chakraborty, P., Guo, F. R., Shedden, K., & Stoev, S. (2025).
-    On the universal calibration of Pareto-type linear combination tests.
-    arXiv preprint arXiv:2509.12066.
+The raw data files and documentation are available [here](https://wwwn.cdc.gov/nchs/nhanes).
+
+## Reference
+
+[1] Chakraborty, P., Guo, F. R., Shedden, K., & Stoev, S. (2025). *On the universal calibration of heavy-tailed combination tests.* arXiv preprint [arXiv:2509.12066](https://arxiv.org/abs/2509.12066).
