@@ -6,9 +6,11 @@ This repository contains R and Julia code used to generate the simulation and ap
 
 ### `simu/` contains scripts to reproduce the simulations. 
 
-The subfolder `finite dim/` contains scripts for finite values of $d$. The script `run-simu.R` will generate and save simulated p-values. Then run `plot.R` to generate the plots. The script `plot-pairwise.R` generates the pairwise plots for combined p-values.
+#### `finite dim/` contains scripts for finite values of $d$. 
+ The script `run-simu.R` will generate and save simulated p-values. Then run `plot.R` to generate the plots. The script `plot-pairwise.R` generates the pairwise plots for combined p-values.
 
-The subfolder `asymp dim/` contains scripts for the case of $d \to \infty$, simulated by large $d$. The script `asymp_detection.R` will generate and save the simulated p-values. Then run `plot-asymp-detection.R` to generate the plots.
+#### `asymp dim/` contains scripts for the case of $d \to \infty$, simulated by large $d$.
+The script `asymp_detection.R` will generate and save the simulated p-values. Then run `plot-asymp-detection.R` to generate the plots.
 
 ### `nhanes/` contains code used to illustrate the Pareto combination test using NHANES data. 
 
