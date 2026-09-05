@@ -12,8 +12,7 @@ datadir <- file.path(getwd(), "asymp_detect_data")
 figdir  <- file.path(dirname(getwd()), "figs")
 
 # newest full-grid CSV (smoke files are excluded)
-csvs <- list.files(datadir, pattern = "^asymp_detection_[0-9]", full.names = TRUE)
-stopifnot(length(csvs) > 0)
+csvs <- list.files(datadir, pattern = "^asymp_detection_([0-9]|local)", full.names = TRUE)stopifnot(length(csvs) > 0)
 infile <- csvs[which.max(file.mtime(csvs))]
 cat("Reading", infile, "\n")
 
