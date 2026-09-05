@@ -4,9 +4,9 @@ This repository contains R and Julia code used to generate the simulation and ap
 
 ## Structure
 
-### `simu/` contains scripts to reproduce the simulations. 
+### `simu/` contains subdirectories with scripts to reproduce the simulations. 
 
-#### `finite dim/` contains scripts for finite values of $d$. 
+#### `finite dim/` contains scripts for the case of finite, fixed $d$. 
  The script `run-simu.R` will generate and save simulated p-values. Then run `plot.R` to generate the plots. The script `plot-pairwise.R` generates the pairwise plots for combined p-values.
 
 #### `asymp dim/` contains scripts for the case of $d \to \infty$, simulated by large $d$.
